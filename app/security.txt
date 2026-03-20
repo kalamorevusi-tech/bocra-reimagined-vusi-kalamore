@@ -1,0 +1,5 @@
+Contact: mailto:kalamorevusi@gmail.com
+Expires: 2027-03-20T00:00:00Z
+Preferred-Languages: en, tn
+Canonical: https://bocra-reimagined-vusi-kalamore.vercel.app/.well-known/security.txt
+Policy: https://github.com/kalamorevusi-tech/bocra-reimagined-vusi-kalamore/blob/main/SECURITY.md
