@@ -9,7 +9,38 @@ export default function Home() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // New state for license tracker
+  const [selectedLicense, setSelectedLicense] = useState(null);
+  const [queuePosition, setQueuePosition] = useState(null);
+
+  const licenses = [
+    { name: "Aircraft Radio Licence", link: "https://www.bocra.org.bw/aircraft-radio-licence" },
+    { name: "Amateur Radio License", link: "https://www.bocra.org.bw/amateur-radio-license" },
+    { name: "Broadcasting Licence", link: "https://www.bocra.org.bw/broadcasting-licence" },
+    { name: "Cellular Licence", link: "https://www.bocra.org.bw/cellular-licence-0" },
+    { name: "Citizen Band Radio Licence", link: "https://www.bocra.org.bw/citizen-band-radio-licence-0" },
+    { name: "Point-to-Multipoint Licence", link: "https://www.bocra.org.bw/point-multipoint-licence" },
+    { name: "Point-to-Point Licence", link: "https://www.bocra.org.bw/point-point-licence" },
+    { name: "Private Radio Communication Licence", link: "https://www.bocra.org.bw/private-radio-communication-licence-0" },
+    { name: "Radio Dealers Licence", link: "https://www.bocra.org.bw/radio-dealers-licence" },
+    { name: "Satellite Service Licence", link: "https://www.bocra.org.bw/satellite-service-licence-0" },
+    { name: "Type Approval Licence", link: "https://www.bocra.org.bw/type-approval-licence-0" },
+    { name: "VANS Licence", link: "https://www.bocra.org.bw/vans-licence" }
+  ];
+
+  const handleLicenseClick = (license) => {
+    setSelectedLicense(license);
+    setQueuePosition(null);
+  };
+
+  const handleApplySubmit = (e) => {
+    e.preventDefault();
+    const randomQueue = Math.floor(Math.random() * 50) + 5;
+    const randomTotal = randomQueue + Math.floor(Math.random() * 40) + 20;
+    setQueuePosition({ position: randomQueue, total: randomTotal });
+  };
+
+  const handleComplaintSubmit = (e) => {
     e.preventDefault();
     const subject = `New Complaint from ${formData.name}`;
     const body = `Name: ${formData.name}\nEmail: ${formData.email}\n\nComplaint:\n${formData.message}`;
@@ -31,7 +62,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Navbar - Big logo */}
+      {/* Navbar */}
       <nav className="bg-[#002B5B] text-white py-6 sticky top-0 z-50 shadow">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row md:items-center gap-6">
           <div>
@@ -76,7 +107,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Services This Week - Clean "MOST VISITED" in italic grey-black */}
+      {/* Popular Services */}
       <section id="popular" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-10">Popular Services This Week</h2>
@@ -93,97 +124,59 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Unified Services Dashboard (addresses integration + real-time analytics) */}
-      <section className="py-16 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-8 text-center">Unified Services Dashboard</h2>
-          <p className="text-center text-gray-600 mb-10">Real-time overview of licensing, complaints, domain registry & cybersecurity</p>
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div className="bg-white p-8 rounded-3xl shadow">
-              <div className="text-5xl mb-4">📋</div>
-              <h3 className="font-bold">12 Licences Pending</h3>
-              <p className="text-green-600 text-sm mt-2">Approved today: 5</p>
-            </div>
-            <div className="bg-white p-8 rounded-3xl shadow">
-              <div className="text-5xl mb-4">📨</div>
-              <h3 className="font-bold">47 Complaints</h3>
-              <p className="text-green-600 text-sm mt-2">Resolved today: 19</p>
-            </div>
-            <div className="bg-white p-8 rounded-3xl shadow">
-              <div className="text-5xl mb-4">🌐</div>
-              <h3 className="font-bold">.bw Domains</h3>
-              <p className="text-green-600 text-sm mt-2">Registered today: 34</p>
-            </div>
-            <div className="bg-white p-8 rounded-3xl shadow">
-              <div className="text-5xl mb-4">🛡️</div>
-              <h3 className="font-bold">CSIRT Alerts</h3>
-              <p className="text-green-600 text-sm mt-2">Active threats blocked: 127</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mandate Quicktabs */}
-      <section id="mandate" className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-8 text-center">Mandate</h2>
-          <div className="flex border-b mb-8">
-            {["Internet", "Broadcasting", "Postal", "Telecommunications"].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 font-medium ${activeTab === tab ? 'border-b-4 border-[#00B4D8] text-[#002B5B]' : 'text-gray-600'}`}>{tab}</button>
-            ))}
-          </div>
-          <div className="bg-gray-50 p-10 rounded-3xl shadow text-lg">
-            {activeTab === "Internet" && <p>BOCRA manages .bw ccTLD, bw CIRT, Electronic Evidence and Electronic Communications Transactions.</p>}
-            {activeTab === "Broadcasting" && <p>Regulates Yarona FM, Duma FM, Gabz FM, and eBotswana with local content quotas.</p>}
-            {activeTab === "Postal" && <p>Ensures safe, reliable and affordable postal services across Botswana.</p>}
-            {activeTab === "Telecommunications" && <p>Handles Type Approval, Radio Spectrum Planning, Numbering Plan and National Radio Frequency Plan.</p>}
-          </div>
-        </div>
-      </section>
-
-      {/* News & Events */}
-      <section id="news" className="py-16 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-10">News & Events</h2>
-          <div className="space-y-6">
-            <div className="border-l-4 border-[#00B4D8] pl-6">
-              <p className="font-bold">PUBLIC NOTICE - BOCRA WEBSITE DEVELOPMENT HACKATHON</p>
-              <p className="text-sm text-gray-500">20 March 2026</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Apply For A License */}
-      <section id="license" className="py-16 bg-white">
+      {/* Apply For A License - Now with Queue Tracker */}
+      <section id="license" className="py-16 bg-gray-100">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-8">Apply For A License</h2>
           <div className="grid md:grid-cols-2 gap-4 text-lg">
-            {[
-              { name: "Aircraft Radio Licence", link: "https://www.bocra.org.bw/aircraft-radio-licence" },
-              { name: "Amateur Radio License", link: "https://www.bocra.org.bw/amateur-radio-license" },
-              { name: "Broadcasting Licence", link: "https://www.bocra.org.bw/broadcasting-licence" },
-              { name: "Cellular Licence", link: "https://www.bocra.org.bw/cellular-licence-0" },
-              { name: "Citizen Band Radio Licence", link: "https://www.bocra.org.bw/citizen-band-radio-licence-0" },
-              { name: "Point-to-Multipoint Licence", link: "https://www.bocra.org.bw/point-multipoint-licence" },
-              { name: "Point-to-Point Licence", link: "https://www.bocra.org.bw/point-point-licence" },
-              { name: "Private Radio Communication Licence", link: "https://www.bocra.org.bw/private-radio-communication-licence-0" },
-              { name: "Radio Dealers Licence", link: "https://www.bocra.org.bw/radio-dealers-licence" },
-              { name: "Satellite Service Licence", link: "https://www.bocra.org.bw/satellite-service-licence-0" },
-              { name: "Type Approval Licence", link: "https://www.bocra.org.bw/type-approval-licence-0" },
-              { name: "VANS Licence", link: "https://www.bocra.org.bw/vans-licence" }
-            ].map((item, i) => (
-              <a key={i} href={item.link} target="_blank" className="p-6 border rounded-2xl hover:bg-white cursor-pointer block">{item.name}</a>
+            {licenses.map((item, i) => (
+              <div 
+                key={i} 
+                onClick={() => handleLicenseClick(item)}
+                className="p-6 border rounded-2xl hover:bg-white cursor-pointer block text-center font-medium"
+              >
+                {item.name}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* License Application Tracker Modal */}
+      {selectedLicense && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setSelectedLicense(null)}>
+          <div className="bg-white rounded-3xl p-10 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+            <h3 className="text-3xl font-bold mb-6">Application for {selectedLicense.name}</h3>
+            
+            {!queuePosition ? (
+              <form onSubmit={handleApplySubmit} className="space-y-6">
+                <input type="text" placeholder="Your Full Name" className="w-full p-4 border rounded-2xl" required />
+                <input type="email" placeholder="Email Address" className="w-full p-4 border rounded-2xl" required />
+                <button type="submit" className="w-full bg-[#002B5B] text-white py-5 rounded-2xl text-xl font-semibold">
+                  Submit Application
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-6xl mb-6">📋</div>
+                <p className="text-2xl font-bold text-green-600">Application Received!</p>
+                <p className="text-5xl font-bold mt-8 text-[#002B5B]">
+                  #{queuePosition.position}
+                </p>
+                <p className="text-xl text-gray-600 mt-2">out of {queuePosition.total} applicants</p>
+                <p className="text-lg mt-8">Estimated processing time: 8–14 working days</p>
+                <button onClick={() => { setSelectedLicense(null); setQueuePosition(null); }} className="mt-10 text-[#00B4D8] font-medium">Close</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Complaint Form */}
-      <section id="complaints" className="py-16 bg-gray-100">
+      <section id="complaints" className="py-16 bg-white">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-8">File A Complaint</h2>
-          <form onSubmit={handleSubmit} className="bg-white p-10 rounded-3xl shadow-xl">
+          <form onSubmit={handleComplaintSubmit} className="bg-gray-50 p-10 rounded-3xl shadow-xl">
             <input type="text" placeholder="Your Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full mb-6 p-4 border rounded-xl" required />
             <input type="email" placeholder="Email Address" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full mb-6 p-4 border rounded-xl" required />
             <textarea placeholder="Describe your complaint..." rows={6} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full mb-8 p-4 border rounded-xl" required />
