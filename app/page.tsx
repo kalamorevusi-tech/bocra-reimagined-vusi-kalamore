@@ -13,9 +13,9 @@ export default function Home() {
   const [isOmangLoggedIn, setIsOmangLoggedIn] = useState(false);
   const [omangId, setOmangId] = useState("");
 
-  // Team Members (unlimited)
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [newMember, setNewMember] = useState({ username: "", password: "" });
+  // All registered users (unlimited + full data stored)
+  const [allUsers, setAllUsers] = useState([]);
+  const [newUser, setNewUser] = useState({ fullName: "", omangId: "", email: "", username: "", password: "" });
   const [currentUser, setCurrentUser] = useState(null);
 
   // License states
@@ -29,36 +29,44 @@ export default function Home() {
     "Satellite Service Licence", "Type Approval Licence", "VANS Licence"
   ];
 
-  // Load team from browser
+  // Load saved users
   useEffect(() => {
-    const saved = localStorage.getItem("bocraTeam");
-    if (saved) setTeamMembers(JSON.parse(saved));
+    const saved = localStorage.getItem("bocraUsers");
+    if (saved) setAllUsers(JSON.parse(saved));
   }, []);
 
-  const saveTeam = (updated) => {
-    setTeamMembers(updated);
-    localStorage.setItem("bocraTeam", JSON.stringify(updated));
+  const saveUsers = (updated) => {
+    setAllUsers(updated);
+    localStorage.setItem("bocraUsers", JSON.stringify(updated));
   };
 
   const handleOmangLogin = () => {
     if (omangId.length > 5) setIsOmangLoggedIn(true);
   };
 
-  const addTeamMember = () => {
-    if (newMember.username && newMember.password) {
-      saveTeam([...teamMembers, {...newMember}]);
-      setNewMember({ username: "", password: "" });
+  const registerNewUser = () => {
+    if (!newUser.fullName || !newUser.omangId || !newUser.email || !newUser.username || !newUser.password) {
+      alert("Please fill all fields");
+      return;
     }
+    const updated = [...allUsers, { ...newUser }];
+    saveUsers(updated);
+    setNewUser({ fullName: "", omangId: "", email: "", username: "", password: "" });
+    alert("✅ User registered successfully!");
   };
 
   const handleTeamLogin = (username, password) => {
-    const user = teamMembers.find(m => m.username === username && m.password === password);
-    if (user) setCurrentUser(user);
-    else alert("Wrong username or password");
+    const user = allUsers.find(u => u.username === username && u.password === password);
+    if (user) {
+      setCurrentUser(user);
+      alert(`Welcome, ${user.fullName}!`);
+    } else {
+      alert("User not found. Please register first.");
+    }
   };
 
   const handleLicenseClick = (license) => {
-    if (!currentUser) return alert("Please log in as a team member first");
+    if (!currentUser) return alert("Please log in as a registered team member first");
     setSelectedLicense(license);
     setQueuePosition(null);
   };
@@ -153,25 +161,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Team Profile System - Unlimited members */}
+      {/* Team Registration - Full Data Storage */}
       {isOmangLoggedIn && (
         <section className="py-16 bg-gray-100">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-4xl font-bold mb-8">Team Profiles (Unlimited Members)</h2>
-            <div className="bg-white p-8 rounded-3xl shadow mb-8">
-              <input type="text" placeholder="Username" value={newMember.username} onChange={e => setNewMember({...newMember, username: e.target.value})} className="p-4 border rounded-2xl mr-4" />
-              <input type="password" placeholder="Password" value={newMember.password} onChange={e => setNewMember({...newMember, password: e.target.value})} className="p-4 border rounded-2xl mr-4" />
-              <button onClick={addTeamMember} className="bg-[#002B5B] text-white px-8 py-4 rounded-2xl">Add Team Member</button>
+            <h2 className="text-4xl font-bold mb-8">Register Team Members (Unlimited)</h2>
+            <div className="bg-white p-8 rounded-3xl shadow mb-8 grid md:grid-cols-5 gap-4">
+              <input type="text" placeholder="Full Name" value={newUser.fullName} onChange={e => setNewUser({...newUser, fullName: e.target.value})} className="p-4 border rounded-2xl" />
+              <input type="text" placeholder="Omang ID" value={newUser.omangId} onChange={e => setNewUser({...newUser, omangId: e.target.value})} className="p-4 border rounded-2xl" />
+              <input type="email" placeholder="Email" value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} className="p-4 border rounded-2xl" />
+              <input type="text" placeholder="Username" value={newUser.username} onChange={e => setNewUser({...newUser, username: e.target.value})} className="p-4 border rounded-2xl" />
+              <input type="password" placeholder="Password" value={newUser.password} onChange={e => setNewUser({...newUser, password: e.target.value})} className="p-4 border rounded-2xl" />
+              <button onClick={registerNewUser} className="bg-[#002B5B] text-white px-8 py-4 rounded-2xl col-span-5 md:col-span-1">Register User</button>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {teamMembers.map((m, i) => (
+              {allUsers.map((user, i) => (
                 <div key={i} className="bg-white p-6 rounded-3xl shadow flex justify-between items-center">
                   <div>
-                    <p className="font-bold">{m.username}</p>
-                    <p className="text-sm text-gray-500">Password protected</p>
+                    <p className="font-bold">{user.fullName}</p>
+                    <p className="text-sm text-gray-500">Omang: {user.omangId} | {user.email}</p>
                   </div>
-                  <button onClick={() => handleTeamLogin(m.username, m.password)} className="bg-green-600 text-white px-6 py-3 rounded-2xl">Login</button>
+                  <button onClick={() => handleTeamLogin(user.username, user.password)} className="bg-green-600 text-white px-6 py-3 rounded-2xl">Login</button>
                 </div>
               ))}
             </div>
