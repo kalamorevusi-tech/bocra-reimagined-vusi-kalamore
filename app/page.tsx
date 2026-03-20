@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from "react";
 
+interface User {
+  fullName: string;
+  omangId: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
@@ -13,14 +21,14 @@ export default function Home() {
   const [isOmangLoggedIn, setIsOmangLoggedIn] = useState(false);
   const [omangId, setOmangId] = useState("");
 
-  // All registered users (unlimited + full data stored)
-  const [allUsers, setAllUsers] = useState([]);
-  const [newUser, setNewUser] = useState({ fullName: "", omangId: "", email: "", username: "", password: "" });
-  const [currentUser, setCurrentUser] = useState(null);
+  // All registered users (unlimited + full data)
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [newUser, setNewUser] = useState<User>({ fullName: "", omangId: "", email: "", username: "", password: "" });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   // License states
-  const [selectedLicense, setSelectedLicense] = useState(null);
-  const [queuePosition, setQueuePosition] = useState(null);
+  const [selectedLicense, setSelectedLicense] = useState<string | null>(null);
+  const [queuePosition, setQueuePosition] = useState<{ position: number; total: number } | null>(null);
 
   const licenses = [
     "Aircraft Radio Licence", "Amateur Radio License", "Broadcasting Licence",
@@ -35,7 +43,7 @@ export default function Home() {
     if (saved) setAllUsers(JSON.parse(saved));
   }, []);
 
-  const saveUsers = (updated) => {
+  const saveUsers = (updated: User[]) => {
     setAllUsers(updated);
     localStorage.setItem("bocraUsers", JSON.stringify(updated));
   };
@@ -55,7 +63,7 @@ export default function Home() {
     alert("✅ User registered successfully!");
   };
 
-  const handleTeamLogin = (username, password) => {
+  const handleTeamLogin = (username: string, password: string) => {
     const user = allUsers.find(u => u.username === username && u.password === password);
     if (user) {
       setCurrentUser(user);
@@ -65,20 +73,20 @@ export default function Home() {
     }
   };
 
-  const handleLicenseClick = (license) => {
+  const handleLicenseClick = (license: string) => {
     if (!currentUser) return alert("Please log in as a registered team member first");
     setSelectedLicense(license);
     setQueuePosition(null);
   };
 
-  const handleApplySubmit = (e) => {
+  const handleApplySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const randomQueue = Math.floor(Math.random() * 45) + 8;
     const randomTotal = randomQueue + Math.floor(Math.random() * 35) + 25;
     setQueuePosition({ position: randomQueue, total: randomTotal });
   };
 
-  const handleComplaintSubmit = (e) => {
+  const handleComplaintSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const subject = `New Complaint from ${formData.name}`;
     const body = `Name: ${formData.name}\nEmail: ${formData.email}\n\nComplaint:\n${formData.message}`;
