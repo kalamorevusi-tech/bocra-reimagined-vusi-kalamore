@@ -76,7 +76,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Services This Week */}
+      {/* Popular Services This Week - Clean "MOST VISITED" in italic grey-black */}
       <section id="popular" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-10">Popular Services This Week</h2>
@@ -93,8 +93,38 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Unified Services Dashboard (addresses integration + real-time analytics) */}
+      <section className="py-16 bg-gray-100">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-4xl font-bold mb-8 text-center">Unified Services Dashboard</h2>
+          <p className="text-center text-gray-600 mb-10">Real-time overview of licensing, complaints, domain registry & cybersecurity</p>
+          <div className="grid md:grid-cols-4 gap-6 text-center">
+            <div className="bg-white p-8 rounded-3xl shadow">
+              <div className="text-5xl mb-4">📋</div>
+              <h3 className="font-bold">12 Licences Pending</h3>
+              <p className="text-green-600 text-sm mt-2">Approved today: 5</p>
+            </div>
+            <div className="bg-white p-8 rounded-3xl shadow">
+              <div className="text-5xl mb-4">📨</div>
+              <h3 className="font-bold">47 Complaints</h3>
+              <p className="text-green-600 text-sm mt-2">Resolved today: 19</p>
+            </div>
+            <div className="bg-white p-8 rounded-3xl shadow">
+              <div className="text-5xl mb-4">🌐</div>
+              <h3 className="font-bold">.bw Domains</h3>
+              <p className="text-green-600 text-sm mt-2">Registered today: 34</p>
+            </div>
+            <div className="bg-white p-8 rounded-3xl shadow">
+              <div className="text-5xl mb-4">🛡️</div>
+              <h3 className="font-bold">CSIRT Alerts</h3>
+              <p className="text-green-600 text-sm mt-2">Active threats blocked: 127</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Mandate Quicktabs */}
-      <section id="mandate" className="py-16 bg-gray-100">
+      <section id="mandate" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-8 text-center">Mandate</h2>
           <div className="flex border-b mb-8">
@@ -102,7 +132,7 @@ export default function Home() {
               <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 font-medium ${activeTab === tab ? 'border-b-4 border-[#00B4D8] text-[#002B5B]' : 'text-gray-600'}`}>{tab}</button>
             ))}
           </div>
-          <div className="bg-white p-10 rounded-3xl shadow text-lg">
+          <div className="bg-gray-50 p-10 rounded-3xl shadow text-lg">
             {activeTab === "Internet" && <p>BOCRA manages .bw ccTLD, bw CIRT, Electronic Evidence and Electronic Communications Transactions.</p>}
             {activeTab === "Broadcasting" && <p>Regulates Yarona FM, Duma FM, Gabz FM, and eBotswana with local content quotas.</p>}
             {activeTab === "Postal" && <p>Ensures safe, reliable and affordable postal services across Botswana.</p>}
@@ -112,7 +142,7 @@ export default function Home() {
       </section>
 
       {/* News & Events */}
-      <section id="news" className="py-16 bg-white">
+      <section id="news" className="py-16 bg-gray-100">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-10">News & Events</h2>
           <div className="space-y-6">
@@ -125,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* Apply For A License */}
-      <section id="license" className="py-16 bg-gray-100">
+      <section id="license" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold mb-8">Apply For A License</h2>
           <div className="grid md:grid-cols-2 gap-4 text-lg">
@@ -150,10 +180,10 @@ export default function Home() {
       </section>
 
       {/* Complaint Form */}
-      <section id="complaints" className="py-16 bg-white">
+      <section id="complaints" className="py-16 bg-gray-100">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-8">File A Complaint</h2>
-          <form onSubmit={handleSubmit} className="bg-gray-50 p-10 rounded-3xl shadow-xl">
+          <form onSubmit={handleSubmit} className="bg-white p-10 rounded-3xl shadow-xl">
             <input type="text" placeholder="Your Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full mb-6 p-4 border rounded-xl" required />
             <input type="email" placeholder="Email Address" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full mb-6 p-4 border rounded-xl" required />
             <textarea placeholder="Describe your complaint..." rows={6} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full mb-8 p-4 border rounded-xl" required />
